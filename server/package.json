@@ -1,0 +1,38 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "main": "server.js",
+  "license": "MIT",
+  "scripts": {
+    "client-install": "npm install --prefix ../client",
+    "start": "node server.js",
+    "server": "nodemon  --exec babel-node server.js",
+    "client": "npm run dev --prefix ../client",
+    "stop": "pkill --signal SIGINT server",
+    "dev": "concurrently \"cross-env BROWSER=none npm run server\" \"wait-on http://localhost:3000 && electron .\"",
+    "pretty": "prettier --write \"./**/*.{js,jsx,json}\""
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.18.3",
+    "concurrently": "^4.1.0",
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "jsonwebtoken": "^8.4.0",
+    "lodash": "^4.17.11",
+    "mongoose": "^5.4.4",
+    "passport": "^0.4.0",
+    "passport-jwt": "^4.0.0",
+    "passport-local": "^1.0.0",
+    "socket.io": "^2.2.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.2.2",
+    "@babel/node": "^7.2.2",
+    "@babel/preset-env": "^7.2.3",
+    "morgan": "^1.9.1",
+    "nodemon": "^1.19.0",
+    "wait-on": "^3.2.0"
+  }
+}
