@@ -3,6 +3,7 @@ import passport from "passport";
 const jwt = require("jsonwebtoken");
 import bcrypt from "bcryptjs";
 import { User } from "../models/User";
+import md5 from "md5";
 
 const router = express.Router();
 
@@ -17,11 +18,13 @@ router.get("/test", (req, res) => {
 // @desc    Registers a user
 // @access  Public
 router.post("/register", (req, res) => {
+  let avatar = `https://www.gravatar.com/avatar/${md5(req.body.email)}`;
   let newUser = new User({
     fullname: req.body.fullname,
     email: req.body.email,
     username: req.body.username,
-    password: req.body.password
+    password: req.body.password,
+    avatar: avatar
   });
 
   newUser
@@ -43,7 +46,6 @@ router.post("/login", (req, res) => {
 
   // Find user by email
   User.findOne({ username: req.body.username }).then(user => {
-    console.log(user);
     if (!user) {
       // NOT FOUND
       return res.status(404).json({ username: "User not found" });

@@ -15,10 +15,10 @@ import Login from "./components/login";
 import tokenSetter from "./utils";
 import { setUser } from "./actions";
 import Loading from "./components/Loading";
+import Signup from "./components/signup";
 
 class Root extends React.Component {
   componentDidMount() {
-    console.log(this.props.isLoading);
     if (localStorage.jwtToken) {
       tokenSetter(localStorage.jwtToken);
       const decoded = jwt_decode(localStorage.jwtToken);
@@ -35,6 +35,7 @@ class Root extends React.Component {
       <Switch>
         <Route exact path="/" component={App} />
         <Route path="/login" component={Login} />
+        <Route path="/signup" component={Signup} />
       </Switch>
     );
   }

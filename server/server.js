@@ -12,6 +12,8 @@ import chalk from "chalk";
 require("dotenv").config();
 
 const app = express();
+// Passport config
+passportConfig(app);
 // Socket
 const client = require("socket.io").listen(6100).sockets;
 // Port variable
@@ -45,9 +47,6 @@ mongoose
   .catch(error => {
     console.log(chalk.red(`Database connection failed: ${error.errmsg}`));
   });
-
-// Passport config
-passportConfig(app);
 
 // Routes connection
 app.use("/user", router);

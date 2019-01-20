@@ -1,5 +1,7 @@
 import React from "react";
 import { Menu, Icon, Modal, Form, Input, Button } from "semantic-ui-react";
+import axios from "axios";
+import { connect } from "react-redux";
 
 class Groups extends React.Component {
   state = {
@@ -9,17 +11,66 @@ class Groups extends React.Component {
     modal: false
   };
 
+  componentDidMount() {
+    if (this.props.currentUser._id) {
+      this.getGroups(this.props.currentUser._id);
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.currentUser._id) {
+      this.getGroups(nextProps.currentUser._id);
+    }
+  }
+
+  getGroups = id => {
+    let req = {
+      id
+    };
+    axios
+      .post("/group/get_all", req)
+      .then(res => {
+        this.setState({
+          groups: res.data
+        });
+      })
+      .catch(err => console.log(err.response));
+  };
   onChange = event => {
     this.setState({ [event.target.name]: event.target.value });
   };
 
   onSubmit = event => {
     event.preventDefault();
+    let groupData = {
+      name: this.state.groupName,
+      details: this.state.groupDetails,
+      createdBy: this.props.currentUser._id
+    };
+    axios
+      .post("/group/create", groupData)
+      .then(res =>
+        this.setState({
+          groups: [...this.state.groups, res.data]
+        })
+      )
+      .catch(err => console.log(err));
   };
   openModal = () => this.setState({ modal: true });
 
   closeModal = () => this.setState({ modal: false });
-
+  displayChannels = groups =>
+    groups.length > 0 &&
+    groups.map(group => (
+      <Menu.Item
+        key={group._id}
+        onClick={() => console.log(group)}
+        name={group.name}
+        style={{ opacity: 0.7 }}
+      >
+        # {group.name}
+      </Menu.Item>
+    ));
   render() {
     const { groups, modal } = this.state;
 
@@ -32,6 +83,7 @@ class Groups extends React.Component {
             </span>{" "}
             ({groups.length}) <Icon name="add" onClick={this.openModal} />
           </Menu.Item>
+          {this.displayChannels(groups)}
         </Menu.Menu>
         <Modal basic open={modal} onClose={this.closeModal}>
           <Modal.Header>Add a Channel</Modal.Header>
@@ -71,4 +123,8 @@ class Groups extends React.Component {
   }
 }
 
-export default Groups;
+const mapStateToProps = state => ({
+  currentUser: state.authentication.user
+});
+
+export default connect(mapStateToProps)(Groups);

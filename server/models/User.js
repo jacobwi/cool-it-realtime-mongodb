@@ -25,7 +25,7 @@ const UserSchema = new Schema({
   },
   avatar: {
     type: String,
-    required: false
+    required: true
   },
   dateCreated: {
     type: Date,
@@ -38,7 +38,8 @@ const UserSchema = new Schema({
   is_active: {
     type: Boolean,
     default: false
-  }
+  },
+  groups: [{ type: Schema.Types.ObjectId, ref: "groups" }]
 });
 
 // User's password prehook

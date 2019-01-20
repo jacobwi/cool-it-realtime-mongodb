@@ -8,16 +8,12 @@ const GroupSchema = new Schema({
     type: String,
     required: true
   },
-  members: [
-    {
-      type: Object
-    }
-  ],
-  messages: [],
-  dateCreated: {
-    type: Date,
-    default: Date.now
-  }
+  details: {
+    type: String,
+    required: true
+  },
+  createdBy: { type: Schema.Types.ObjectId, ref: "users" },
+  users: [String]
 });
 
 export const Group = mongoose.model("groups", GroupSchema);

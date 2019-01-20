@@ -1,8 +1,6 @@
 import jwt from "./strategies/jwt";
 import passport from "passport";
-
 jwt();
-
 export default function(app) {
   app.use(passport.initialize());
   app.use(passport.session());

@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid, Header, Icon, Dropdown } from "semantic-ui-react";
+import { Grid, Header, Icon, Dropdown, Image } from "semantic-ui-react";
 import { connect } from "react-redux";
 import { logout } from "../../actions";
 import { withRouter } from "react-router-dom";
@@ -24,7 +24,6 @@ class UserPanel extends React.Component {
     }
   ];
   logout = () => {
-    console.log("logging out");
     this.props.logout();
     this.props.history.push("/login");
   };
@@ -40,6 +39,12 @@ class UserPanel extends React.Component {
           </Grid.Row>
 
           <Header style={{ padding: "1em" }} as="h4" inverted>
+            <Image
+              src={this.props.currentUser.avatar}
+              size="big"
+              circular
+              style={{ padding: "10px" }}
+            />
             <Dropdown
               trigger={<span>{this.props.currentUser.fullname}</span>}
               options={this.dropdownOptions()}

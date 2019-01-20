@@ -2,6 +2,7 @@ import express from "express";
 import passport from "passport";
 const jwt = require("jsonwebtoken");
 import { Group } from "../models/Group";
+import chalk from "chalk";
 
 const groupRouter = express.Router();
 
@@ -12,23 +13,46 @@ groupRouter.post(
   "/create",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    let member = { username: req.body.username, role: "admin" };
+    let group = req.body;
     let newGroup = new Group({
-      members: [member],
-      name: req.body.name
+      name: req.body.name,
+      details: req.body.details,
+      createdBy: req.body.createdBy
     });
 
     newGroup
       .save()
-      .then(user => {
-        res.send(user);
+      .then(resGroup => {
+        Group.findByIdAndUpdate(
+          resGroup._id,
+          { $push: { users: resGroup.createdBy } },
+          { safe: true, upsert: true },
+          function(err, model) {
+            console.log(err);
+          }
+        );
+        res.send(resGroup);
       })
       .catch(error => {
         res.status(400).send(error);
       });
   }
 );
-
+// @route   POST user/profile
+// @desc    Private route that only logged in users can access
+// @access  Private
+groupRouter.post("/get_all", (req, res) => {
+  let id = req.body.id;
+  console.log(req.body);
+  let groupMap = [];
+  Group.find({ users: req.body.id }, function(err, users) {
+    users.forEach(function(user) {
+      console.log(user);
+      groupMap.push(user);
+    });
+    res.send(groupMap);
+  });
+});
 // @route   POST user/profile
 // @desc    Private route that only logged in users can access
 // @access  Private

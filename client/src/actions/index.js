@@ -21,7 +21,17 @@ export const login = (userData, history) => dispatch => {
       })
     );
 };
-
+export const signup = (userData, history) => dispatch => {
+  axios
+    .post("/api/users/register", userData)
+    .then(res => history.push("/login"))
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
 export const logout = history => dispatch => {
   dispatch(setUser({}));
   tokenSetter(false);
