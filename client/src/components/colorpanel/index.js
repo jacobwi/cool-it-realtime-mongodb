@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-export default class Landing extends Component {
+export default class ColorPanel extends Component {
   render() {
     return <div />;
   }

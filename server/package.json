@@ -6,10 +6,9 @@
   "scripts": {
     "client-install": "npm install --prefix ../client",
     "start": "node server.js",
-    "server": "nodemon  --exec babel-node server.js",
+    "server": "nodemon --exec babel-node server.js",
     "client": "npm run dev --prefix ../client",
-    "stop": "pkill --signal SIGINT server",
-    "dev": "concurrently \"cross-env BROWSER=none npm run server\" \"wait-on http://localhost:3000 && electron .\"",
+    "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
     "pretty": "prettier --write \"./**/*.{js,jsx,json}\""
   },
   "dependencies": {
@@ -17,6 +16,7 @@
     "body-parser": "^1.18.3",
     "concurrently": "^4.1.0",
     "cors": "^2.8.5",
+    "cross-env": "^5.2.0",
     "express": "^4.16.4",
     "jsonwebtoken": "^8.4.0",
     "lodash": "^4.17.11",

@@ -3,7 +3,8 @@ import { isEmpty } from "lodash";
 // IN PRODUCTION ENV SET isAuth.. to false
 const INITIAL_STATE = {
   isAuthenticated: false,
-  user: {}
+  user: {},
+  isLoading: false
 };
 
 export default function(state = INITIAL_STATE, action) {
@@ -12,7 +13,8 @@ export default function(state = INITIAL_STATE, action) {
       return {
         ...state,
         isAuthenticated: !isEmpty(action.payload),
-        user: action.payload
+        user: action.payload,
+        isLoading: false
       };
     default:
       return state;

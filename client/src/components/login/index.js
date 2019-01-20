@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import styled from "styled-components";
 import { Button, Icon, Input, Label } from "semantic-ui-react";
 import { connect } from "react-redux";
-import { login } from "../../../actions";
+import { login } from "../../actions";
+
 const Main = styled.div`
   display: flex;
   flex-direction: column;
@@ -26,19 +27,25 @@ class Login extends Component {
       visible: false,
       username: "",
       password: "",
-      errors: ""
+      errors: [],
+      loading: false
     };
   }
 
-  onSubmit = event => {
+  onSubmit = async event => {
     event.preventDefault();
-
+    this.setState({
+      loading: true
+    });
     const User = {
       username: this.state.username,
       password: this.state.password
     };
 
-    this.props.login(User, this.props.history);
+    await this.props.login(User, this.props.history);
+    this.setState({
+      loading: false
+    });
   };
 
   onChange = event => {
@@ -81,6 +88,8 @@ class Login extends Component {
           labelPosition="right"
           color="black"
           onClick={this.onSubmit}
+          disabled={this.state.loading}
+          className={this.state.loading ? "loading" : ""}
         >
           Login
           <Icon name="right arrow" />

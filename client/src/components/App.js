@@ -1,15 +1,17 @@
-import React, { Component } from "react";
-import { BrowserRouter as Router } from "react-router-dom";
-import Layout from "./Layout";
+import React from "react";
+import { Grid } from "semantic-ui-react";
+import ColorPanel from "./colorpanel";
+import Sidemenu from "./sidemenu";
 
-class App extends Component {
-  render() {
-    return (
-      <Router>
-        <Layout />
-      </Router>
-    );
-  }
-}
+const App = () => (
+  <Grid columns="equal" className="app" style={{ background: "#eee" }}>
+    <ColorPanel />
+    <Sidemenu />
+
+    <Grid.Column style={{ marginLeft: 320 }} />
+
+    <Grid.Column width={4} />
+  </Grid>
+);
 
 export default App;

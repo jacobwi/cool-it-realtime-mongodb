@@ -1,10 +1,9 @@
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 import tokenSetter from "../utils";
-import { SET_GROUPS, SET_FRIENDS, GET_ERRORS, SET_USER } from "./types";
+import { SET_GROUPS, GET_ERRORS, SET_USER } from "./types";
 
 export const login = (userData, history) => dispatch => {
-  console.log("logging");
   axios
     .post("user/login", userData)
     .then(res => {
@@ -13,6 +12,7 @@ export const login = (userData, history) => dispatch => {
       localStorage.setItem("jwtToken", token);
       const decoded = jwt_decode(token);
       dispatch(setUser(decoded));
+      history.push("/");
     })
     .catch(err =>
       dispatch({
@@ -20,6 +20,12 @@ export const login = (userData, history) => dispatch => {
         payload: err.response.data
       })
     );
+};
+
+export const logout = history => dispatch => {
+  dispatch(setUser({}));
+  tokenSetter(false);
+  localStorage.removeItem("jwtToken");
 };
 
 export const getGroups = groupData => dispatch => {
