@@ -2,7 +2,6 @@ import express from "express";
 import passport from "passport";
 const jwt = require("jsonwebtoken");
 import bcrypt from "bcryptjs";
-import * as Config from "../config";
 import { User } from "../models/User";
 
 const router = express.Router();
@@ -52,12 +51,11 @@ router.post("/login", (req, res) => {
 
     // Resalt the input password and cross refernce it to db
     bcrypt.compare(password, user.password).then(isValid => {
-      console.log("r");
       if (isValid) {
         // Generate JSON token
         jwt.sign(
           user.toJSON(),
-          Config.jwtKey,
+          process.env.jwtKey,
           { expiresIn: 3600 },
           (err, token) => {
             if (err) throw err;

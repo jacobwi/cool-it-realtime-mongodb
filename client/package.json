@@ -1,9 +1,14 @@
 {
-  "name": "foo-chat",
+  "name": "foo-chat-client",
   "version": "0.1.0",
   "private": true,
   "main": "public/electron.js",
   "proxy": "http://localhost:6000/",
+  "author": {
+    "name": "Jacob William",
+    "url": "https://jacobwi.io/",
+    "github": "https://github.com/onlyserenity"
+  },
   "dependencies": {
     "axios": "^0.18.0",
     "chalk": "^2.4.2",

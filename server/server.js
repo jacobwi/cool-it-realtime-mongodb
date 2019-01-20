@@ -8,7 +8,8 @@ import cors from "cors";
 import passportConfig from "./config/passport.js";
 import router from "./routes/user";
 import groupRouter from "./routes/group";
-import { MongoURI } from "./config";
+import chalk from "chalk";
+require("dotenv").config();
 
 const app = express();
 // Socket
@@ -31,16 +32,18 @@ app.use(cors());
 // Database connection
 mongoose
   .connect(
-    MongoURI,
+    process.env.MongoURI,
     {
       useNewUrlParser: true
     }
   )
   .then(db => {
-    console.log("Connection to MongoDB has been successfully established");
+    console.log(
+      chalk.green("Connection to MongoDB has been successfully established")
+    );
   })
   .catch(error => {
-    console.log(`Database connection failed: ${error.errmsg}`);
+    console.log(chalk.red(`Database connection failed: ${error.errmsg}`));
   });
 
 // Passport config
@@ -57,5 +60,5 @@ app.get("/", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Started listening to port ${PORT}`);
+  console.log(chalk.green(`Started listening to port ${PORT}`));
 });
