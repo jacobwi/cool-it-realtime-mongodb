@@ -5,23 +5,21 @@ require("dotenv").config();
 
 const opts = {};
 opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
+
 opts.secretOrKey = process.env.jwtKey;
 
 export default function() {
-  passport.use(
-    new JwtStrategy(opts, (jwt_payload, done) => {
-      console.log(jwt_payload._id);
-      User.findById(jwt_payload._id)
-        .then(user => {
-          if (user) {
+  passport.use(new JwtStrategy(opts, function(jwt_payload, done) {
+    User.findOne({id: jwt_payload.sub}, function(err, user) {
+        if (err) {
+            return done(err, false);
+        }
+        if (user) {
             return done(null, user);
-          }
-
-          return done(null, false);
-        })
-        .catch(err => {
-          console.log(`Error Log: ${err}`);
-        });
-    })
-  );
+        } else {
+            return done(null, false);
+            // or you could create a new account
+        }
+    });
+}));
 }

@@ -1,7 +1,8 @@
-import { SET_GROUPS, GET_GROUPS } from "../actions/types";
+import { SET_GROUPS, GET_GROUPS, SET_CURRENT_GROUP } from "../actions/types";
 
 const INITIAL_STATE = {
-  groups: []
+  groups: [],
+  currentGroup: null
 };
 
 export default function(state = INITIAL_STATE, action) {
@@ -12,6 +13,11 @@ export default function(state = INITIAL_STATE, action) {
       return {
         ...state,
         groups: [...action.payload]
+      };
+    case SET_CURRENT_GROUP: 
+      return {
+        ...state,
+        currentGroup:  action.payload.currentGroup
       };
     default:
       return state;

@@ -2,39 +2,35 @@ import React from "react";
 import { Menu, Icon, Modal, Form, Input, Button } from "semantic-ui-react";
 import axios from "axios";
 import { connect } from "react-redux";
+import { setCurrentGroup } from '../../actions';
 
 class Groups extends React.Component {
   state = {
     groups: [],
     groupName: "",
     groupDetails: "",
-    modal: false
+    modal: false,
+    firstReload: true
   };
-
-  componentDidMount() {
-    if (this.props.currentUser._id) {
+  componentDidUpdate(nextProps) {
+    if (nextProps.currentUser !== this.props.currentUser){
       this.getGroups(this.props.currentUser._id);
     }
   }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.currentUser._id) {
-      this.getGroups(nextProps.currentUser._id);
-    }
-  }
-
-  getGroups = id => {
+  getGroups = async (id) => {
     let req = {
       id
     };
-    axios
+    let json =  await axios
       .post("/group/get_all", req)
-      .then(res => {
-        this.setState({
-          groups: res.data
-        });
-      })
-      .catch(err => console.log(err.response));
+
+      this.setState({
+        groups: json.data
+      });
+
+ 
+      this.props.setCurrentGroup(this.state.groups[0])
+
   };
   onChange = event => {
     this.setState({ [event.target.name]: event.target.value });
@@ -51,7 +47,8 @@ class Groups extends React.Component {
       .post("/group/create", groupData)
       .then(res =>
         this.setState({
-          groups: [...this.state.groups, res.data]
+          groups: [...this.state.groups, res.data],
+          modal: false
         })
       )
       .catch(err => console.log(err));
@@ -64,13 +61,16 @@ class Groups extends React.Component {
     groups.map(group => (
       <Menu.Item
         key={group._id}
-        onClick={() => console.log(group)}
+        onClick={() => this.setGroup(group)}
         name={group.name}
         style={{ opacity: 0.7 }}
+        active={group._id === this.props.currentGroup._id}
       >
         # {group.name}
       </Menu.Item>
     ));
+
+    setGroup = group => this.props.setCurrentGroup(group);
   render() {
     const { groups, modal } = this.state;
 
@@ -83,7 +83,7 @@ class Groups extends React.Component {
             </span>{" "}
             ({groups.length}) <Icon name="add" onClick={this.openModal} />
           </Menu.Item>
-          {this.displayChannels(groups)}
+          {this.props.currentGroup && this.displayChannels(groups)}
         </Menu.Menu>
         <Modal basic open={modal} onClose={this.closeModal}>
           <Modal.Header>Add a Channel</Modal.Header>
@@ -124,7 +124,8 @@ class Groups extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  currentUser: state.authentication.user
+  currentUser: state.authentication.user,
+  currentGroup: state.groups.currentGroup
 });
 
-export default connect(mapStateToProps)(Groups);
+export default connect(mapStateToProps, { setCurrentGroup })(Groups);

@@ -3,8 +3,8 @@ const Schema = mongoose.Schema;
 
 const MessageSchema = new Schema(
   {
-    conversationId: {
-      type: Schema.Types.ObjectId,
+    group: {
+      type: String,
       required: true
     },
     body: {
@@ -12,8 +12,14 @@ const MessageSchema = new Schema(
       required: true
     },
     author: {
-      type: Schema.Types.ObjectId,
-      ref: "User"
+      username: {
+        type: String,
+        required: true
+      },
+      avatar: {
+        type: String,
+        required: true
+      }
     }
   },
   {
