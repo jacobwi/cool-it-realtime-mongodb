@@ -14,10 +14,10 @@ export default function(state = INITIAL_STATE, action) {
         ...state,
         groups: [...action.payload]
       };
-    case SET_CURRENT_GROUP: 
+    case SET_CURRENT_GROUP:
       return {
         ...state,
-        currentGroup:  action.payload.currentGroup
+        currentGroup: action.payload.currentGroup
       };
     default:
       return state;

@@ -1,20 +1,22 @@
 import React from "react";
 import { Header, Segment, Input, Icon } from "semantic-ui-react";
-import { connect } from 'react-redux'
+import { connect } from "react-redux";
 class MessagesHeader extends React.Component {
   componentDidMount() {
-    console.log()
-  } 
+    console.log();
+  }
   render() {
     return (
       <Segment clearing>
-
         <Header fluid="true" as="h2" floated="left" style={{ marginBottom: 0 }}>
           <span>
             {this.props.currentGroup && this.props.currentGroup.name}
             <Icon name={"star outline"} color="black" />
           </span>
-          <Header.Subheader>{this.props.currentGroup && this.props.currentGroup.users.length} Members</Header.Subheader>
+          <Header.Subheader>
+            {this.props.currentGroup && this.props.currentGroup.users.length}{" "}
+            Members
+          </Header.Subheader>
         </Header>
 
         {/* Channel Search Input */}

@@ -1,8 +1,8 @@
 import React from "react";
 import { Segment, Button, Input } from "semantic-ui-react";
-import styled from 'styled-components';
-import { connect } from 'react-redux';
-import axios from 'axios';
+import styled from "styled-components";
+import { connect } from "react-redux";
+import axios from "axios";
 
 const Main = styled.div`
   & .form {
@@ -11,17 +11,16 @@ const Main = styled.div`
     margin-left: 320px !important;
     left: 0;
     right: 1em;
-
   }
-`
+`;
 class MessageForm extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
-      message: '',
-      currentGroup: '',
+      message: "",
+      currentGroup: "",
       loading: false
-    }
+    };
   }
   onSubmit = async event => {
     event.preventDefault();
@@ -52,33 +51,33 @@ class MessageForm extends React.Component {
   render() {
     return (
       <Main>
-      <Segment className="form">
-        <Input
-          fluid
-          name="message"
-          style={{ marginBottom: "0.7em" }}
-          label={<Button icon={"add"} />}
-          labelPosition="left"
-          placeholder="Write your message"
-          onChange={this.onChange}
-        />
-        <Button.Group icon widths="2">
-          <Button
-            color="orange"
-            content="Add Reply"
+        <Segment className="form">
+          <Input
+            fluid
+            name="message"
+            style={{ marginBottom: "0.7em" }}
+            label={<Button icon={"add"} />}
             labelPosition="left"
-            icon="edit"
-            onClick={this.onSubmit}
-            className={this.state.loading ? "loading" : ""}
+            placeholder="Write your message"
+            onChange={this.onChange}
           />
-          <Button
-            color="teal"
-            content="Upload Media"
-            labelPosition="right"
-            icon="cloud upload"
-          />
-        </Button.Group>
-      </Segment>
+          <Button.Group icon widths="2">
+            <Button
+              color="orange"
+              content="Add Reply"
+              labelPosition="left"
+              icon="edit"
+              onClick={this.onSubmit}
+              className={this.state.loading ? "loading" : ""}
+            />
+            <Button
+              color="teal"
+              content="Upload Media"
+              labelPosition="right"
+              icon="cloud upload"
+            />
+          </Button.Group>
+        </Segment>
       </Main>
     );
   }
@@ -89,4 +88,3 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps)(MessageForm);
-

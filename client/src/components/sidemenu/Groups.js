@@ -2,7 +2,7 @@ import React from "react";
 import { Menu, Icon, Modal, Form, Input, Button } from "semantic-ui-react";
 import axios from "axios";
 import { connect } from "react-redux";
-import { setCurrentGroup } from '../../actions';
+import { setCurrentGroup } from "../../actions";
 
 class Groups extends React.Component {
   state = {
@@ -13,24 +13,21 @@ class Groups extends React.Component {
     firstReload: true
   };
   componentDidUpdate(nextProps) {
-    if (nextProps.currentUser !== this.props.currentUser){
+    if (nextProps.currentUser !== this.props.currentUser) {
       this.getGroups(this.props.currentUser._id);
     }
   }
-  getGroups = async (id) => {
+  getGroups = async id => {
     let req = {
       id
     };
-    let json =  await axios
-      .post("/group/get_all", req)
+    let json = await axios.post("/group/get_all", req);
 
-      this.setState({
-        groups: json.data
-      });
+    this.setState({
+      groups: json.data
+    });
 
- 
-      this.props.setCurrentGroup(this.state.groups[0])
-
+    this.props.setCurrentGroup(this.state.groups[0]);
   };
   onChange = event => {
     this.setState({ [event.target.name]: event.target.value });
@@ -70,7 +67,7 @@ class Groups extends React.Component {
       </Menu.Item>
     ));
 
-    setGroup = group => this.props.setCurrentGroup(group);
+  setGroup = group => this.props.setCurrentGroup(group);
   render() {
     const { groups, modal } = this.state;
 
@@ -128,4 +125,7 @@ const mapStateToProps = state => ({
   currentGroup: state.groups.currentGroup
 });
 
-export default connect(mapStateToProps, { setCurrentGroup })(Groups);
+export default connect(
+  mapStateToProps,
+  { setCurrentGroup }
+)(Groups);

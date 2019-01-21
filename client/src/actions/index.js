@@ -67,5 +67,5 @@ export const setCurrentGroup = group => {
     payload: {
       currentGroup: group
     }
-  }
-}
+  };
+};
