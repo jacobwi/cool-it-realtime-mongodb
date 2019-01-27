@@ -6,6 +6,8 @@ import MessageForm from "./MessageForm";
 import styled from "styled-components";
 import { connect } from "react-redux";
 import axios from "axios";
+import openSocket from 'socket.io-client';
+
 const Main = styled.div`
   & .messages {
     height: 340px;
@@ -23,6 +25,16 @@ class Messages extends React.Component {
       user: this.props.currentUser
     };
   }
+  componentDidMount() {
+    const socket = openSocket('http://localhost:8080');
+    socket.on('messages', data => {
+      if (data.action === 'create') {
+        this.setState({
+          messages: [...this.state.messages, data.message]
+        })
+      }
+    })
+  }
   componentDidUpdate(nextProps) {
     if (nextProps.currentGroup !== this.props.currentGroup) {
       this.getMessages(this.props.currentGroup._id);
@@ -37,6 +49,7 @@ class Messages extends React.Component {
     this.setState({
       messages: json.data
     });
+
   };
   displayMessages = messages =>
     messages.length > 0 &&

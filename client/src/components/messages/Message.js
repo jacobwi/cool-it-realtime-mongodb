@@ -2,7 +2,7 @@ import React from "react";
 import moment from "moment";
 import { Comment } from "semantic-ui-react";
 
-const timeFromNow = timestamp => moment(timestamp).fromNow();
+
 
 const Message = ({ message, user }) => (
   <Comment>

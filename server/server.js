@@ -43,6 +43,12 @@ mongoose
     console.log(
       chalk.green("Connection to MongoDB has been successfully established")
     );
+    const server = app.listen(8080);
+
+    const io = require('./socket').init(server);
+    io.on('connection', socket => {
+      console.log(`Client connected`)
+    });
   })
   .catch(error => {
     console.log(chalk.red(`Database connection failed: ${error.errmsg}`));
@@ -58,6 +64,3 @@ app.get("/", (req, res) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log(chalk.green(`Started listening to port ${PORT}`));
-});

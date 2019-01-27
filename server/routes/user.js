@@ -18,7 +18,7 @@ router.get("/test", (req, res) => {
 // @desc    Registers a user
 // @access  Public
 router.post("/register", (req, res) => {
-  let avatar = `https://www.gravatar.com/avatar/${md5(req.body.email)}`;
+  let avatar = `https://www.gravatar.com/avatar/${md5(req.body.email)}?d=identicon`;
   let newUser = new User({
     fullname: req.body.fullname,
     email: req.body.email,

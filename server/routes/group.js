@@ -5,6 +5,7 @@ import { Group } from "../models/Group";
 import { Message } from '../models/Message'
 import chalk from "chalk";
 
+const io = require('../socket');
 const groupRouter = express.Router();
 
 // @route   POST user/profile
@@ -45,11 +46,9 @@ groupRouter.post(
 groupRouter.post("/get_all", passport.authenticate("jwt", { session: false }),
 (req, res) => {
   let id = req.body.id;
-  console.log(req.body);
   let groupMap = [];
   Group.find({ users: req.body.id }, function(err, users) {
     users.forEach(function(user) {
-      console.log(user);
       groupMap.push(user);
     });
     res.send(groupMap);
@@ -65,7 +64,6 @@ groupRouter.post("/get_all_messages", passport.authenticate("jwt", { session: fa
   let groupMap = [];
   Message.find({ group: req.body.id }, function(err, users) {
     users.forEach(function(user) {
-      console.log(user);
       groupMap.push(user);
     });
     res.send(groupMap);
@@ -85,6 +83,7 @@ groupRouter.post("/post_message",   passport.authenticate("jwt", { session: fals
   newMessage
     .save()
     .then(resGroup => {
+      io.getSession().emit('messages', { action: 'create', message: newMessage})
       res.send(resGroup);
     })
     .catch(error => {

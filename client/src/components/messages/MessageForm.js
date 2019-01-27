@@ -27,7 +27,7 @@ class MessageForm extends React.Component {
     this.setState({
       loading: true
     });
-
+    let result;
     let messageData = {
       group: this.props.currentGroup._id,
       body: this.state.message,
@@ -36,9 +36,10 @@ class MessageForm extends React.Component {
     axios
       .post("/group/post_message", messageData)
       .then(res =>
+
         this.setState({
-          groups: [...this.state.groups, res.data],
-          modal: false
+
+          loading: false
         })
       )
       .catch(err => console.log(err));
