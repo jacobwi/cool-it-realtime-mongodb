@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import styled from "styled-components";
-import { Button, Icon, Input, Label } from "semantic-ui-react";
+import { Button, Icon, Input, Label, Message, Header } from "semantic-ui-react";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
+
 import { signup } from "../../actions";
 
 const Main = styled.div`
@@ -9,12 +11,10 @@ const Main = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 300px;
-
+  padding-top: 40px;
   & div {
     width: 400px;
   }
-
   & button {
     margin-top: 20px !important;
   }
@@ -25,8 +25,11 @@ class Signup extends Component {
 
     this.state = {
       visible: false,
+      fullname: "",
       username: "",
+      email: "",
       password: "",
+      confirmPassword: "",
       errors: [],
       loading: false
     };
@@ -38,11 +41,14 @@ class Signup extends Component {
       loading: true
     });
     const User = {
+      fullname: this.state.fullname,
       username: this.state.username,
-      password: this.state.password
+      email: this.state.email,
+      password: this.state.password,
+      confirmPassword: this.state.confirmPassword
     };
 
-    await this.props.login(User, this.props.history);
+    await this.props.signup(User, this.props.history);
     this.setState({
       loading: false
     });
@@ -56,8 +62,27 @@ class Signup extends Component {
   render() {
     return (
       <Main>
+        <Header as="h2" icon>
+          <Icon name="braille" />
+          Cool It!
+          <Header.Subheader>Create New Account</Header.Subheader>
+        </Header>
+
         <div>
           <Label pointing="below" size="medium">
+            Full Name
+          </Label>
+          <Input
+            icon="vcard"
+            iconPosition="left"
+            placeholder="Enter fullname here"
+            name="fullname"
+            value={this.state.fullname}
+            onChange={this.onChange}
+          />
+        </div>
+        <div>
+          <Label pointing="right" size="medium">
             Username
           </Label>
           <Input
@@ -70,7 +95,21 @@ class Signup extends Component {
           />
         </div>
         <div>
-          <Label pointing="below" size="medium">
+          <Label pointing="right" size="medium">
+            Email
+          </Label>
+          <Input
+            icon="mail"
+            iconPosition="left"
+            placeholder="Enter email here"
+            name="email"
+            type="email"
+            value={this.state.email}
+            onChange={this.onChange}
+          />
+        </div>
+        <div>
+          <Label pointing="right" size="medium">
             Password
           </Label>
           <Input
@@ -83,6 +122,20 @@ class Signup extends Component {
             type="password"
           />
         </div>
+        <div>
+          <Label pointing="right" size="medium">
+            Confirm Password
+          </Label>
+          <Input
+            icon="repeat"
+            iconPosition="left"
+            placeholder="Confirm password here"
+            name="confirmPassword"
+            value={this.state.confirmPassword}
+            onChange={this.onChange}
+            type="password"
+          />
+        </div>
         <Button
           icon
           labelPosition="right"
@@ -91,9 +144,12 @@ class Signup extends Component {
           disabled={this.state.loading}
           className={this.state.loading ? "loading" : ""}
         >
-          Login
+          Signup
           <Icon name="right arrow" />
         </Button>
+        <Message>
+          Have an account? <Link to="/login">Login</Link>
+        </Message>
       </Main>
     );
   }

@@ -3,6 +3,7 @@ import { Menu, Icon, Modal, Form, Input, Button } from "semantic-ui-react";
 import axios from "axios";
 import { connect } from "react-redux";
 import { setCurrentGroup } from "../../actions";
+import openSocket from 'socket.io-client';
 
 class Groups extends React.Component {
   state = {
@@ -10,12 +11,18 @@ class Groups extends React.Component {
     groupName: "",
     groupDetails: "",
     modal: false,
-    firstReload: true
+    user: this.props.user
   };
-  componentDidUpdate(nextProps) {
-    if (nextProps.currentUser !== this.props.currentUser) {
-      this.getGroups(this.props.currentUser._id);
-    }
+  componentDidMount() {
+    this.getGroups(this.state.user._id);
+    const socket = openSocket("http://localhost:8080");
+    socket.on("groups", data => {
+      if (data.action === "create") {
+        this.setState({
+          groups: [...this.state.groups, data.group]
+        });
+      }
+    });
   }
   getGroups = async id => {
     let req = {
@@ -44,7 +51,6 @@ class Groups extends React.Component {
       .post("/group/create", groupData)
       .then(res =>
         this.setState({
-          groups: [...this.state.groups, res.data],
           modal: false
         })
       )

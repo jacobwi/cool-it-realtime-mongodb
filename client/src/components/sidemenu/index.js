@@ -2,7 +2,7 @@ import React from "react";
 import UserPanel from "./UserPanel";
 import { Menu } from "semantic-ui-react";
 import Groups from "./Groups";
-
+import { connect } from "react-redux";
 class SidePanel extends React.Component {
   render() {
     return (
@@ -14,10 +14,17 @@ class SidePanel extends React.Component {
         style={{ background: "#181b26", fontSize: "1.2rem" }}
       >
         <UserPanel />
-        <Groups />
+        <Groups
+          key={this.props.currentUser && this.props.currentUser._id}
+          user={this.props.currentUser}
+        />
       </Menu>
     );
   }
 }
 
-export default SidePanel;
+const mapStateToProps = state => ({
+  currentUser: state.authentication.user
+});
+
+export default connect(mapStateToProps)(SidePanel);

@@ -2,10 +2,10 @@ import express from "express";
 import passport from "passport";
 const jwt = require("jsonwebtoken");
 import { Group } from "../models/Group";
-import { Message } from '../models/Message'
+import { Message } from "../models/Message";
 import chalk from "chalk";
 
-const io = require('../socket');
+const io = require("../socket");
 const groupRouter = express.Router();
 
 // @route   POST user/profile
@@ -25,6 +25,7 @@ groupRouter.post(
     newGroup
       .save()
       .then(resGroup => {
+        io.getSession().emit("groups", { action: "create", group: newGroup });
         Group.findByIdAndUpdate(
           resGroup._id,
           { $push: { users: resGroup.createdBy } },
@@ -43,53 +44,64 @@ groupRouter.post(
 // @route   POST user/profile
 // @desc    Private route that only logged in users can access
 // @access  Private
-groupRouter.post("/get_all", passport.authenticate("jwt", { session: false }),
-(req, res) => {
-  let id = req.body.id;
-  let groupMap = [];
-  Group.find({ users: req.body.id }, function(err, users) {
-    users.forEach(function(user) {
-      groupMap.push(user);
+groupRouter.post(
+  "/get_all",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    let id = req.body.id;
+    let groupMap = [];
+    Group.find({ users: req.body.id }, function(err, users) {
+      users.forEach(function(user) {
+        groupMap.push(user);
+      });
+      res.send(groupMap);
     });
-    res.send(groupMap);
-  });
-});
+  }
+);
 
 // @route   POST user/profile
 // @desc    Private route that only logged in users can access
 // @access  Private
-groupRouter.post("/get_all_messages", passport.authenticate("jwt", { session: false }),
-(req, res) => {
-
-  let groupMap = [];
-  Message.find({ group: req.body.id }, function(err, users) {
-    users.forEach(function(user) {
-      groupMap.push(user);
+groupRouter.post(
+  "/get_all_messages",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    let groupMap = [];
+    Message.find({ group: req.body.id }, function(err, users) {
+      users.forEach(function(user) {
+        groupMap.push(user);
+      });
+      res.send(groupMap);
     });
-    res.send(groupMap);
-  });
-});
+  }
+);
 // @route   POST user/profile
 // @desc    Private route that only logged in users can access
 // @access  Private
-groupRouter.post("/post_message",   passport.authenticate("jwt", { session: false }),
-(req, res) => {
-  let newMessage = new Message({
-    group: req.body.group,
-    body: req.body.body,
-    author: req.body.author
-  });
-
-  newMessage
-    .save()
-    .then(resGroup => {
-      io.getSession().emit('messages', { action: 'create', message: newMessage})
-      res.send(resGroup);
-    })
-    .catch(error => {
-      res.status(400).send(error);
+groupRouter.post(
+  "/post_message",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    let newMessage = new Message({
+      group: req.body.group,
+      body: req.body.body,
+      author: req.body.author
     });
-});
+
+    newMessage
+      .save()
+      .then(resGroup => {
+        io.getSession().emit("messages", {
+          action: "create",
+          message: newMessage
+        });
+        res.send(resGroup);
+      })
+      .catch(error => {
+        res.status(400).send(error);
+      });
+  }
+);
 // @route   POST user/profile
 // @desc    Private route that only logged in users can access
 // @access  Private

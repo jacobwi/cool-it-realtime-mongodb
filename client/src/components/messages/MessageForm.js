@@ -36,9 +36,7 @@ class MessageForm extends React.Component {
     axios
       .post("/group/post_message", messageData)
       .then(res =>
-
         this.setState({
-
           loading: false
         })
       )

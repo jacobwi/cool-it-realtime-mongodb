@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import styled from "styled-components";
-import { Button, Icon, Input, Label } from "semantic-ui-react";
+import { Button, Icon, Input, Label, Message } from "semantic-ui-react";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
+
 import { login } from "../../actions";
 
 const Main = styled.div`
@@ -10,11 +12,9 @@ const Main = styled.div`
   justify-content: center;
   align-items: center;
   height: 300px;
-
   & div {
     width: 400px;
   }
-
   & button {
     margin-top: 20px !important;
   }
@@ -94,15 +94,16 @@ class Login extends Component {
           Login
           <Icon name="right arrow" />
         </Button>
+        <Message>
+          Don't have an account? <Link to="/signup">Sign up</Link>
+        </Message>
       </Main>
     );
   }
 }
-
 const mapStateToProps = state => ({
   authentication: state.authentication
 });
-
 export default connect(
   mapStateToProps,
   { login }

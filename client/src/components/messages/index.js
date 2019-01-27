@@ -6,7 +6,7 @@ import MessageForm from "./MessageForm";
 import styled from "styled-components";
 import { connect } from "react-redux";
 import axios from "axios";
-import openSocket from 'socket.io-client';
+import openSocket from "socket.io-client";
 
 const Main = styled.div`
   & .messages {
@@ -21,25 +21,24 @@ class Messages extends React.Component {
     this.state = {
       messages: [],
       messagesLoading: true,
-      channel: this.props.currentChannel,
-      user: this.props.currentUser
+      group: this.props.group,
+      user: this.props.user
     };
   }
   componentDidMount() {
-    const socket = openSocket('http://localhost:8080');
-    socket.on('messages', data => {
-      if (data.action === 'create') {
+    if (this.state.group) {
+      this.getMessages(this.state.group.id);
+    }
+    const socket = openSocket("http://localhost:8080");
+    socket.on("messages", data => {
+      if (data.action === "create") {
         this.setState({
           messages: [...this.state.messages, data.message]
-        })
+        });
       }
-    })
+    });
   }
-  componentDidUpdate(nextProps) {
-    if (nextProps.currentGroup !== this.props.currentGroup) {
-      this.getMessages(this.props.currentGroup._id);
-    }
-  }
+
   getMessages = async id => {
     let req = {
       id
@@ -49,7 +48,6 @@ class Messages extends React.Component {
     this.setState({
       messages: json.data
     });
-
   };
   displayMessages = messages =>
     messages.length > 0 &&

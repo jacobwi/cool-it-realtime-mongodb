@@ -9,7 +9,7 @@ import {
 } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 
-import App from "./components/App";
+import Layout from "./components/Layout";
 import store from "./store";
 import Login from "./components/login";
 import tokenSetter from "./utils";
@@ -33,7 +33,7 @@ class Root extends React.Component {
       <Loading />
     ) : (
       <Switch>
-        <Route exact path="/" component={App} />
+        <Route exact path="/" component={Layout} />
         <Route path="/login" component={Login} />
         <Route path="/signup" component={Signup} />
       </Switch>

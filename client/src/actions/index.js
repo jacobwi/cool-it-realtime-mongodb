@@ -23,7 +23,7 @@ export const login = (userData, history) => dispatch => {
 };
 export const signup = (userData, history) => dispatch => {
   axios
-    .post("/api/users/register", userData)
+    .post("user/register", userData)
     .then(res => history.push("/login"))
     .catch(err =>
       dispatch({

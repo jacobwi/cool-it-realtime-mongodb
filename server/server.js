@@ -33,21 +33,18 @@ app.use(cors());
 
 // Database connection
 mongoose
-  .connect(
-    process.env.MongoURI,
-    {
-      useNewUrlParser: true
-    }
-  )
+  .connect(process.env.MongoURI, {
+    useNewUrlParser: true
+  })
   .then(db => {
     console.log(
       chalk.green("Connection to MongoDB has been successfully established")
     );
     const server = app.listen(8080);
 
-    const io = require('./socket').init(server);
-    io.on('connection', socket => {
-      console.log(`Client connected`)
+    const io = require("./socket").init(server);
+    io.on("connection", socket => {
+      console.log(`Client connected`);
     });
   })
   .catch(error => {
@@ -63,4 +60,3 @@ app.get("/", (req, res) => {
     message: "Expressjs has started successfully"
   });
 });
-
