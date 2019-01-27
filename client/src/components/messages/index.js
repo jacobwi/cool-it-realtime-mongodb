@@ -4,7 +4,7 @@ import Message from "./Message";
 import MessagesHeader from "./MessagesHeader";
 import MessageForm from "./MessageForm";
 import styled from "styled-components";
-import { connect } from "react-redux";
+
 import axios from "axios";
 import openSocket from "socket.io-client";
 
@@ -14,6 +14,7 @@ const Main = styled.div`
     overflow-y: scroll;
   }
 `;
+const socket = openSocket("http://localhost:8080");
 class Messages extends React.Component {
   constructor(props) {
     super(props);
@@ -27,9 +28,8 @@ class Messages extends React.Component {
   }
   componentDidMount() {
     if (this.state.group) {
-      this.getMessages(this.state.group.id);
+      this.getMessages(this.state.group._id);
     }
-    const socket = openSocket("http://localhost:8080");
     socket.on("messages", data => {
       if (data.action === "create") {
         this.setState({
@@ -38,12 +38,15 @@ class Messages extends React.Component {
       }
     });
   }
-
+  componentWillUnmount() {
+    socket.off();
+    socket.removeListener("messages");
+  }
   getMessages = async id => {
     let req = {
       id
     };
-    let json = await axios.post("/group/get_all_messages", req);
+    let json = await axios.post("/message/get_all_messages", req);
 
     this.setState({
       messages: json.data
@@ -52,7 +55,7 @@ class Messages extends React.Component {
   displayMessages = messages =>
     messages.length > 0 &&
     messages.map(message => (
-      <Message user={message.author} message={message.body} />
+      <Message key={message._id} user={message.author} message={message.body} />
     ));
   render() {
     return (
@@ -65,15 +68,14 @@ class Messages extends React.Component {
           </Comment.Group>
         </Segment>
 
-        <MessageForm />
+        <MessageForm
+          key={this.state.user && this.state.user._id}
+          group={this.state.group}
+          user={this.state.user}
+        />
       </Main>
     );
   }
 }
 
-const mapStateToProps = state => ({
-  currentUser: state.authentication.user,
-  currentGroup: state.groups.currentGroup
-});
-
-export default connect(mapStateToProps)(Messages);
+export default Messages;

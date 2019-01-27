@@ -1,7 +1,13 @@
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 import tokenSetter from "../utils";
-import { SET_GROUPS, GET_ERRORS, SET_USER, SET_CURRENT_GROUP } from "./types";
+import {
+  SET_GROUPS,
+  GET_ERRORS,
+  SET_USER,
+  SET_CURRENT_GROUP,
+  SET_LOADER
+} from "./types";
 
 export const login = (userData, history) => dispatch => {
   axios
@@ -67,5 +73,11 @@ export const setCurrentGroup = group => {
     payload: {
       currentGroup: group
     }
+  };
+};
+export const setLoader = condition => {
+  return {
+    type: SET_LOADER,
+    payload: condition
   };
 };

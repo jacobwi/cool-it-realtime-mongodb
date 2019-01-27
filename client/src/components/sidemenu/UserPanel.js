@@ -2,7 +2,7 @@ import React from "react";
 import { Grid, Header, Icon, Dropdown, Image } from "semantic-ui-react";
 import { connect } from "react-redux";
 import { logout } from "../../actions";
-import { withRouter } from "react-router-dom";
+
 class UserPanel extends React.Component {
   dropdownOptions = () => [
     {
@@ -59,9 +59,7 @@ const mapStateToProps = state => ({
   currentUser: state.authentication.user
 });
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    { logout }
-  )(UserPanel)
-);
+export default connect(
+  mapStateToProps,
+  { logout }
+)(UserPanel);

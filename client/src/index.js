@@ -13,18 +13,19 @@ import Layout from "./components/Layout";
 import store from "./store";
 import Login from "./components/login";
 import tokenSetter from "./utils";
-import { setUser } from "./actions";
+import { setUser, setLoader } from "./actions";
 import Loading from "./components/Loading";
 import Signup from "./components/signup";
 
 class Root extends React.Component {
-  componentDidMount() {
+  componentWillMount() {
     if (localStorage.jwtToken) {
       tokenSetter(localStorage.jwtToken);
       const decoded = jwt_decode(localStorage.jwtToken);
       this.props.setUser(decoded);
       this.props.history.push("/");
     } else {
+      this.props.setLoader(false);
       this.props.history.push("/login");
     }
   }
@@ -48,7 +49,7 @@ const mapStateToProps = state => ({
 const RootWithAuth = withRouter(
   connect(
     mapStateToProps,
-    { setUser }
+    { setUser, setLoader }
   )(Root)
 );
 

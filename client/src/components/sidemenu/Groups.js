@@ -3,8 +3,8 @@ import { Menu, Icon, Modal, Form, Input, Button } from "semantic-ui-react";
 import axios from "axios";
 import { connect } from "react-redux";
 import { setCurrentGroup } from "../../actions";
-import openSocket from 'socket.io-client';
-
+import openSocket from "socket.io-client";
+const socket = openSocket("http://localhost:8080");
 class Groups extends React.Component {
   state = {
     groups: [],
@@ -14,27 +14,34 @@ class Groups extends React.Component {
     user: this.props.user
   };
   componentDidMount() {
-    this.getGroups(this.state.user._id);
-    const socket = openSocket("http://localhost:8080");
-    socket.on("groups", data => {
-      if (data.action === "create") {
-        this.setState({
-          groups: [...this.state.groups, data.group]
-        });
-      }
-    });
+    if (this.state.user) {
+      this.getGroups(this.state.user._id);
+      socket.on("groups", data => {
+        if (data.action === "create") {
+          this.setState({
+            groups: [...this.state.groups, data.group]
+          });
+        }
+      });
+    }
   }
-  getGroups = async id => {
+  componentWillUnmount() {
+    socket.off("groups", this.getGroups);
+  }
+  getGroups = id => {
     let req = {
       id
     };
-    let json = await axios.post("/group/get_all", req);
+    axios
+      .post("/group/get_all", req)
+      .then(res => {
+        this.setState({
+          groups: res.data
+        });
 
-    this.setState({
-      groups: json.data
-    });
-
-    this.props.setCurrentGroup(this.state.groups[0]);
+        this.props.setCurrentGroup(this.state.groups[0]);
+      })
+      .catch(err => console.log(err));
   };
   onChange = event => {
     this.setState({ [event.target.name]: event.target.value });
