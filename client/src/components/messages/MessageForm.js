@@ -2,7 +2,7 @@ import React from "react";
 import { Segment, Button, Input, Icon } from "semantic-ui-react";
 import styled from "styled-components";
 import axios from "axios";
-
+import uuid4 from "uuid4";
 const Main = styled.div`
   & .form {
     position: fixed !important;
@@ -34,20 +34,23 @@ class MessageForm extends React.Component {
     this.setState({
       loading: true
     });
-
-    let messageData = {
-      group: this.state.currentGroup._id,
-      body: this.state.message,
-      author: this.state.user
-    };
-    axios
-      .post("/message/post_message", messageData)
-      .then(res =>
-        this.setState({
-          loading: false
-        })
-      )
-      .catch(err => console.log(err));
+    if (!this.state.isFile) {
+      let messageData = {
+        group: this.state.currentGroup._id,
+        body: this.state.message,
+        author: this.state.user
+      };
+      axios
+        .post("/message/post_message", messageData)
+        .then(res =>
+          this.setState({
+            loading: false
+          })
+        )
+        .catch(err => console.log(err));
+    } else {
+      this.uploadImage();
+    }
   };
   onChange = event => {
     this.setState({
@@ -66,7 +69,29 @@ class MessageForm extends React.Component {
       });
     }
   };
-
+  uploadImage = () => {
+    const filePath = `group/public/${uuid4()}.jpg`;
+    let messageData = {
+      group: this.state.currentGroup._id,
+      img: this.state.file,
+      author: this.state.user
+    };
+    axios
+      .post("/message/image", messageData)
+      .then(res =>
+        this.setState({
+          loading: false
+        })
+      )
+      .catch(err => console.log(err));
+  };
+  selectFile = event => {
+    const file = event.target.files[0];
+    console.log(file)
+    if (file) {
+      this.setState({ file, isFile: true, isMessage: true });
+    }
+  };
   render() {
     return (
       <Main>

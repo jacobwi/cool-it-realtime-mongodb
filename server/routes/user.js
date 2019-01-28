@@ -61,7 +61,7 @@ router.post("/login", (req, res) => {
         jwt.sign(
           user.toJSON(),
           process.env.jwtKey,
-          { expiresIn: 3600 },
+          { expiresIn: "7d" },
           (err, token) => {
             if (err) throw err;
 
@@ -77,16 +77,5 @@ router.post("/login", (req, res) => {
     });
   });
 });
-
-// @route   POST user/profile
-// @desc    Private route that only logged in users can access
-// @access  Private
-router.get(
-  "/current",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    res.status(200).json(req.user);
-  }
-);
 
 export default router;

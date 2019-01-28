@@ -3,6 +3,7 @@ import UserPanel from "./UserPanel";
 import { Menu } from "semantic-ui-react";
 import Groups from "./Groups";
 import { connect } from "react-redux";
+import Favorites from "./Favorites";
 class SidePanel extends React.Component {
   render() {
     return (
@@ -14,6 +15,7 @@ class SidePanel extends React.Component {
         style={{ background: "#181b26", fontSize: "1.2rem" }}
       >
         <UserPanel />
+        <Favorites />
         <Groups
           key={this.props.currentUser && this.props.currentUser._id}
           user={this.props.currentUser}

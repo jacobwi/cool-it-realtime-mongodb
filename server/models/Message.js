@@ -9,7 +9,6 @@ const MessageSchema = new Schema(
     },
     body: {
       type: String,
-      required: true
     },
     author: {
       username: {
@@ -20,7 +19,12 @@ const MessageSchema = new Schema(
         type: String,
         required: true
       }
-    }
+    },
+    img: { 
+      data: Buffer, 
+      contentType: String,
+      required: false
+    },
   },
   {
     timestamps: true // Saves createdAt and updatedAt as dates. createdAt will be our timestamp.

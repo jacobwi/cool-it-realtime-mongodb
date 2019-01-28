@@ -17,8 +17,6 @@ const Layout = ({ currentUser, currentGroup }) => (
         group={currentGroup}
       />
     </Grid.Column>
-
-    <Grid.Column width={4}>Members </Grid.Column>
   </Grid>
 );
 const mapStateToProps = state => ({

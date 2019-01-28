@@ -1,21 +1,21 @@
 import express from "express";
 import bodyParser from "body-parser";
 import mongoose from "mongoose";
-import passport from "passport";
+
 import morgan from "morgan";
-import http from "http";
 import cors from "cors";
 import passportConfig from "./config/passport.js";
 import router from "./routes/user";
 import groupRouter from "./routes/group";
+import messageRouter from "./routes/message";
 import chalk from "chalk";
 require("dotenv").config();
 
 const app = express();
+
 // Passport config
 passportConfig(app);
-// Socket
-const client = require("socket.io").listen(6100).sockets;
+
 // Port variable
 const PORT = 6000;
 
@@ -30,6 +30,9 @@ app.use(
   })
 );
 app.use(cors());
+
+
+
 
 // Database connection
 mongoose
@@ -54,6 +57,8 @@ mongoose
 // Routes connection
 app.use("/user", router);
 app.use("/group", groupRouter);
+app.use("/message", messageRouter);
+
 // Initial GET method
 app.get("/", (req, res) => {
   res.status(200).json({
