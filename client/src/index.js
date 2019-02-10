@@ -22,8 +22,14 @@ class Root extends React.Component {
     if (localStorage.jwtToken) {
       tokenSetter(localStorage.jwtToken);
       const decoded = jwt_decode(localStorage.jwtToken);
-      this.props.setUser(decoded);
-      this.props.history.push("/");
+      if (decoded.exp > new Date()) {
+        this.props.setUser(decoded);
+        this.props.history.push("/");
+      }
+      else {
+        this.props.setLoader(false);
+        this.props.history.push("/login");
+      }
     } else {
       this.props.setLoader(false);
       this.props.history.push("/login");

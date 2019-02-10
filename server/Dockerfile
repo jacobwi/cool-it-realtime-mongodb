@@ -4,4 +4,4 @@ FROM node:latest
 COPY ./ ./
 RUN npm install
 
-CMD ["npm", "start", "server"]
+// CMD ["npm", "start", "server"]
