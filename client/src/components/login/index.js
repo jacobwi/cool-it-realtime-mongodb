@@ -11,7 +11,7 @@ const Main = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 300px;
+  height:  100vh;
   & div {
     width: 400px;
   }
