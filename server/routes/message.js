@@ -1,9 +1,14 @@
 import express from "express";
 import passport from "passport";
 import { Message } from "../models/Message";
+import cloudinary from 'cloudinary';
 
-var multer  = require('multer')
-var upload = multer({ dest: 'uploads/' })
+cloudinary.config({
+    cloud_name: 'dw1fnyr3s',
+    api_key: '262962525333366',
+    api_secret: 'Sr8nd8pnJgiCjj66BkzaJq4vUMg'
+});
+
 const io = require("../socket");
 const messageRouter = express.Router();
 
@@ -31,12 +36,7 @@ messageRouter.post(
   "/post_message",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    let newMessage = new Message({
-      group: req.body.group,
-      body: req.body.body,
-      author: req.body.author
-    });
-
+    console.log(req)
     newMessage
       .save()
       .then(resGroup => {
@@ -52,28 +52,11 @@ messageRouter.post(
   }
 );
 
-messageRouter.post('/image', upload.single('avatar'), function (req, res, next) {
+messageRouter.post('/image',passport.authenticate("jwt", { session: false }),
+ (req, res) => {
+  
 
-  console.log(req.body.img)
-  let newMessage = new Message({
-    group: req.body.group,
-    img: req.body.img,
-    author: req.body.author
-  });
-
-  newMessage
-    .save()
-    .then(resGroup => {
-      io.getSession().emit("messages", {
-        action: "create",
-        message: newMessage
-      });
-      res.send(resGroup);
-    })
-    .catch(error => {
-      res.status(400).send(error);
-    });
-
-})
+ }
+)
 
 export default messageRouter;

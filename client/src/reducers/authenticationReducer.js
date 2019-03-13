@@ -1,10 +1,11 @@
-import { SET_USER, SET_LOADER } from "../actions/types";
+import { SET_USER, SET_LOADER, GET_ERRORS } from "../actions/types";
 import { isEmpty } from "lodash";
 // IN PRODUCTION ENV SET isAuth.. to false
 const INITIAL_STATE = {
   isAuthenticated: false,
   user: {},
-  isLoading: true
+  isLoading: true,
+  errors: {}
 };
 
 export default function(state = INITIAL_STATE, action) {
@@ -19,8 +20,14 @@ export default function(state = INITIAL_STATE, action) {
 
     case SET_LOADER:
       return {
+        ...state,
         isLoading: action.payload
       };
+    case GET_ERRORS: 
+      return {
+        ...state,
+        errors: action.payload
+      }
     default:
       return state;
   }

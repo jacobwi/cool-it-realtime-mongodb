@@ -2,7 +2,7 @@ import React from "react";
 import { Segment, Button, Input, Icon } from "semantic-ui-react";
 import styled from "styled-components";
 import axios from "axios";
-import uuid4 from "uuid4";
+
 const Main = styled.div`
   & .form {
     position: fixed !important;
@@ -20,6 +20,7 @@ class MessageForm extends React.Component {
       isMessage: false,
       currentGroup: this.props.group,
       user: this.props.user,
+      fullname: this.props.fullname,
       loading: false,
       file: "",
       isFile: false,
@@ -44,6 +45,7 @@ class MessageForm extends React.Component {
         .post("/message/post_message", messageData)
         .then(res =>
           this.setState({
+            message: '',
             loading: false
           })
         )
@@ -69,28 +71,27 @@ class MessageForm extends React.Component {
       });
     }
   };
-  uploadImage = () => {
-    const filePath = `group/public/${uuid4()}.jpg`;
-    let messageData = {
-      group: this.state.currentGroup._id,
-      img: this.state.file,
-      author: this.state.user
-    };
-    axios
-      .post("/message/image", messageData)
-      .then(res =>
-        this.setState({
-          loading: false
-        })
+  uploadImage =  async () => {
+
+
+    const formData = new FormData();
+    formData.append(
+      'image',
+      this.state.file,
+      this.state.file.name
+    );
+
+      axios.post("https://api.cloudinary.com/v1_1/dw1fnyr3s/image/upload",
+        formData
       )
-      .catch(err => console.log(err));
   };
   selectFile = event => {
+    event.preventDefault();
     const file = event.target.files[0];
-    console.log(file)
     if (file) {
       this.setState({ file, isFile: true, isMessage: true });
     }
+    
   };
   render() {
     return (
@@ -141,7 +142,7 @@ class MessageForm extends React.Component {
               icon="edit"
               onClick={this.onSubmit}
               className={this.state.loading ? "loading" : ""}
-              disabled={this.state.isMessage ? false : true}
+              disabled={this.state.isMessage ? false : !this.state.message ? true : true}
             />
           </Button.Group>
         </Segment>

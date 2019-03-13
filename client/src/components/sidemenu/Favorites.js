@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Menu, Icon, Modal, Form, Input, Button } from "semantic-ui-react";
+import { Menu, Icon } from "semantic-ui-react";
 export default class Favorites extends Component {
   render() {
     return (
