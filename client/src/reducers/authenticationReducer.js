@@ -23,11 +23,11 @@ export default function(state = INITIAL_STATE, action) {
         ...state,
         isLoading: action.payload
       };
-    case GET_ERRORS: 
+    case GET_ERRORS:
       return {
         ...state,
         errors: action.payload
-      }
+      };
     default:
       return state;
   }

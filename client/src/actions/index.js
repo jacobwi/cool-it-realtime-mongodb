@@ -38,12 +38,11 @@ export const signup = (userData, history) => dispatch => {
       })
     );
 };
-export const logout = (history) => dispatch => {
+export const logout = history => dispatch => {
   history.push("/login");
   dispatch(setUser({}));
   tokenSetter(false);
   localStorage.removeItem("jwtToken");
-
 };
 
 export const getGroups = groupData => dispatch => {

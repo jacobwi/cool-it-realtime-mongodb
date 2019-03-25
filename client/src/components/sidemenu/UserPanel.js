@@ -24,9 +24,7 @@ class UserPanel extends React.Component {
     }
   ];
   logout = () => {
-    
     this.props.logout(this.props.history);
-    
   };
   render() {
     return (

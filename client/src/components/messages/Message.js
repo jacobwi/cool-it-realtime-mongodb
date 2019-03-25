@@ -10,8 +10,8 @@ const Message = ({ message, user, time, extra }) => (
     <Comment.Content>
       <Comment.Author as="a">{user.username}</Comment.Author>
       <Comment.Metadata>{timeFromNow(time)}</Comment.Metadata>
-      {extra && extra.hasOwnProperty("image") ? (
-        <Image src={extra.image} size="medium" />
+      {extra && extra.hasOwnProperty("img") ? (
+        <Image src={extra.img} size="medium" />
       ) : (
         <Comment.Text>{message}</Comment.Text>
       )}

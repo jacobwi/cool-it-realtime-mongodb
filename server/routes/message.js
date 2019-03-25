@@ -1,17 +1,10 @@
 import express from "express";
 import passport from "passport";
 import { Message } from "../models/Message";
-import cloudinary from 'cloudinary';
-
-cloudinary.config({
-    cloud_name: 'dw1fnyr3s',
-    api_key: '262962525333366',
-    api_secret: 'Sr8nd8pnJgiCjj66BkzaJq4vUMg'
-});
-
+import { multerUploads, dataUri } from "../config/multer";
 const io = require("../socket");
 const messageRouter = express.Router();
-
+import { uploader, cloudinaryConfig } from "../config/cloudinary";
 // @route   POST message/get_all_messages
 // @desc    Private route that only logged in users can access
 // @access  Private
@@ -36,7 +29,14 @@ messageRouter.post(
   "/post_message",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    console.log(req)
+    console.log(req.body);
+    let newMessage = new Message({
+      group: req.body.group,
+      body: req.body.body,
+      author: req.body.author,
+      img: req.body.img
+    });
+
     newMessage
       .save()
       .then(resGroup => {
@@ -52,11 +52,30 @@ messageRouter.post(
   }
 );
 
-messageRouter.post('/image',passport.authenticate("jwt", { session: false }),
- (req, res) => {
-  
+messageRouter.post("/image", multerUploads, (req, res) => {
+  if (req.file) {
+    const file = dataUri(req).content;
+    return uploader
+      .upload(file)
+      .then(result => {
+        const image = result.url;
 
- }
-)
+        return res.status(200).json({
+          messge: "Your image has been uploded successfully to cloudinary",
+          data: {
+            image
+          }
+        });
+      })
+      .catch(err =>
+        res.status(400).json({
+          messge: "someting went wrong while processing your request",
+          data: {
+            err
+          }
+        })
+      );
+  }
+});
 
 export default messageRouter;

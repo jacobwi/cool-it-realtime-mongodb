@@ -25,8 +25,7 @@ class Root extends React.Component {
       if (decoded.exp > Date.now()) {
         this.props.setUser(decoded);
         this.props.history.push("/");
-      }
-      else {
+      } else {
         this.props.setLoader(false);
         this.props.history.push("/login");
       }

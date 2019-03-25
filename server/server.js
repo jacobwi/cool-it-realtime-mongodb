@@ -1,7 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 import mongoose from "mongoose";
-
+import { resolve } from "path";
 import morgan from "morgan";
 import cors from "cors";
 import passportConfig from "./config/passport.js";
@@ -9,6 +9,7 @@ import router from "./routes/user";
 import groupRouter from "./routes/group";
 import messageRouter from "./routes/message";
 import chalk from "chalk";
+import { cloudinaryConfig } from "./config/cloudinary";
 require("dotenv").config();
 
 const app = express();
@@ -23,16 +24,20 @@ const PORT = 6000;
 app.use(morgan("tiny"));
 
 // Connect body parser to express app
-app.use(bodyParser.json());
 app.use(
-  bodyParser.urlencoded({
-    extended: false
+  bodyParser.json({
+    extended: true,
+    limit: "50mb"
   })
 );
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+    limit: "50mb"
+  })
+);
+
 app.use(cors());
-
-
-
 
 // Database connection
 mongoose
@@ -55,6 +60,7 @@ mongoose
   });
 
 // Routes connection
+app.use("*", cloudinaryConfig);
 app.use("/user", router);
 app.use("/group", groupRouter);
 app.use("/message", messageRouter);

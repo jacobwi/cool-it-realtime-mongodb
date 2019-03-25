@@ -24,7 +24,7 @@ class MessageForm extends React.Component {
       loading: false,
       file: "",
       isFile: false,
-
+      imageLink: "",
       uploadTask: null,
       uploadState: "",
       percentUploaded: 0
@@ -45,7 +45,7 @@ class MessageForm extends React.Component {
         .post("/message/post_message", messageData)
         .then(res =>
           this.setState({
-            message: '',
+            message: "",
             loading: false
           })
         )
@@ -71,19 +71,32 @@ class MessageForm extends React.Component {
       });
     }
   };
-  uploadImage =  async () => {
-
-
-    const formData = new FormData();
-    formData.append(
-      'image',
-      this.state.file,
-      this.state.file.name
-    );
-
-      axios.post("https://api.cloudinary.com/v1_1/dw1fnyr3s/image/upload",
-        formData
-      )
+  uploadImage = async () => {
+    let file = this.state.file;
+    let formaData = new FormData();
+    formaData.append("image", file);
+    formaData.append("name", this.state.user);
+    let res = await axios.post("/message/image", formaData);
+    if (res) {
+      let messageData = {
+        group: this.state.currentGroup._id,
+        body: this.state.message,
+        author: this.state.user,
+        img: res.data.data.image
+      };
+      axios
+        .post("/message/post_message", messageData)
+        .then(result =>
+          this.setState({
+            message: "",
+            loading: false,
+            file: "",
+            isFile: false,
+            isMessage: false
+          })
+        )
+        .catch(err => console.log(err));
+    }
   };
   selectFile = event => {
     event.preventDefault();
@@ -91,7 +104,6 @@ class MessageForm extends React.Component {
     if (file) {
       this.setState({ file, isFile: true, isMessage: true });
     }
-    
   };
   render() {
     return (
@@ -142,7 +154,9 @@ class MessageForm extends React.Component {
               icon="edit"
               onClick={this.onSubmit}
               className={this.state.loading ? "loading" : ""}
-              disabled={this.state.isMessage ? false : !this.state.message ? true : true}
+              disabled={
+                this.state.isMessage ? false : !this.state.message ? true : true
+              }
             />
           </Button.Group>
         </Segment>

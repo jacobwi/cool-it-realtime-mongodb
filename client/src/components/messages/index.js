@@ -45,7 +45,7 @@ class Messages extends React.Component {
   getMessages = async id => {
     let req = {
       id
-    };  
+    };
     let json = await axios.post("/message/get_all_messages", req);
 
     this.setState({
@@ -55,10 +55,12 @@ class Messages extends React.Component {
   displayMessages = messages =>
     messages.length > 0 &&
     messages.map(message => (
-      <Message key={message._id} 
-      user={message.author} message={message.body} 
-      time={message.createdAt}
-      extra={message}
+      <Message
+        key={message._id}
+        user={message.author}
+        message={message.body}
+        time={message.createdAt}
+        extra={message}
       />
     ));
   render() {
@@ -76,7 +78,6 @@ class Messages extends React.Component {
           key={this.state.user && this.state.user._id}
           group={this.state.group}
           user={this.state.user}
-          
         />
       </Main>
     );
